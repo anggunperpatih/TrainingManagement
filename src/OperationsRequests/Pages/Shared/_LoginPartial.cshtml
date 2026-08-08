@@ -1,0 +1,5 @@
+@using Microsoft.AspNetCore.Hosting
+@inject IWebHostEnvironment WebHostEnvironment
+@inject Microsoft.AspNetCore.Identity.SignInManager<OperationsRequests.Domain.ApplicationUser> SignInManager
+@inject Microsoft.AspNetCore.Identity.UserManager<OperationsRequests.Domain.ApplicationUser> UserManager
+<ul class="navbar-nav"><li class="nav-item">@if (SignInManager.IsSignedIn(User)){<a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>}</li><li class="nav-item">@if (SignInManager.IsSignedIn(User)){<form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })"><button type="submit" class="nav-link btn btn-link text-dark">Logout</button></form>}else{<a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>}</li>@if(WebHostEnvironment.IsDevelopment()){<li class="nav-item"><a class="nav-link text-dark" asp-page="/Demo">Demo accounts</a></li>}</ul>

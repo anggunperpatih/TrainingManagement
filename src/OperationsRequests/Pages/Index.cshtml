@@ -1,0 +1,6 @@
+@page
+@model OperationsRequests.Pages.IndexModel
+@{ViewData["Title"]="Dashboard";}
+<div class="d-flex justify-content-between align-items-center mb-3"><h1>Training requests</h1><a class="btn btn-primary" asp-page="/Requests/Create">New request</a></div>
+<div class="row mb-3">@foreach(var count in Model.Counts){<div class="col-md-3"><div class="card"><div class="card-body"><small>@count.Key</small><div class="fs-3">@count.Value</div></div></div></div>}</div>
+<table class="table table-hover"><thead><tr><th>Number</th><th>Title</th><th>Site</th><th>Requester</th><th>Status</th></tr></thead><tbody>@foreach(var r in Model.Requests){<tr><td><a asp-page="/Requests/Details" asp-route-id="@r.Id">@r.RequestNumber</a></td><td>@r.Title</td><td>@r.Site.Name</td><td>@r.RequestedBy.DisplayName</td><td>@r.Status</td></tr>}</tbody></table>
