@@ -80,7 +80,9 @@
                 <td>
                     <form method="post" asp-page-handler="Toggle">
                         <input name="id" value="@u.Id" type="hidden" />
-                        <button class="btn btn-sm btn-outline-danger">Toggle active</button>
+                        <button class="btn btn-sm @(u.IsActive ? "btn-outline-danger" : "btn-outline-success")">
+                            @(u.IsActive ? "Inactive" : "Active")
+                        </button>
                     </form>
                 </td>
             </tr>
