@@ -19,5 +19,23 @@ Use environment variables/secrets for connection strings. Apply migrations durin
 ## Deployment
 GitHub is source control only; deploy the application container/App Service to a host with SQL Server (for example Azure App Service + Azure SQL) using repository secrets for the connection string. Do not commit passwords, tokens, or production connection strings.
 
-## Known deferred work
-Automated integration tests and a hosting provider configuration still require completion before an assessment submission. A public deployment also requires a hosting account/resource and GitHub authentication via PAT/SSH/CLI, not an account password.
+## Tests\nRun unit and SQL Server integration tests with `TEST_SQL_CONNECTION` set in the environment. The suite covers scope isolation, mandatory workflow notes, self-approval, priority routing, audit creation, SQL Server rowversion concurrency, and unique final-decision enforcement.\n\n## AI use and verification\nAI assisted scaffolding and review; generated changes were compiled, exercised against SQL Server, and tested. Remaining risk: full browser/Identity integration test coverage and public deployment are outside this local solution.
+# Scenario coverage
+
+| Requirement | Status | Evidence |
+|---|---|---|
+| Identity, roles and backend scopes | Implemented | `ScopeService`, Identity roles, tests |
+| Hierarchy and live user assignment | Implemented | Admin Users page + validation |
+| Request lifecycle, audit, messages | Implemented | Workflow service + details page |
+| SQL concurrency/final decision | Implemented | SQL Server integration tests |
+| Dashboard scope/reporting | Implemented locally | Dashboard page |
+| Automated tests | Partial | 12 tests; extend Identity browser cases before external assessment |
+| Public deployment | Deferred | Requires hosting runtime and managed SQL Server |
+
+## Test commands
+
+```powershell
+$env:TEST_SQL_CONNECTION = $env:TEST_SQL_CONNECTION
+dotnet test OperationsRequests.sln -c Release
+```
+
