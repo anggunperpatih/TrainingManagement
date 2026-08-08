@@ -1,4 +1,18 @@
 @page
 @model OperationsRequests.Pages.DemoModel
-@{ViewData["Title"]="Development demo accounts";}
-<h1>Development demo accounts</h1><p>This page is unavailable outside Development.</p><table class="table"><thead><tr><th>Role</th><th>Email</th><th>Password</th></tr></thead><tbody><tr><td>PlatformAdmin</td><td>platform.admin@demo.local</td><td>@Model.Password</td></tr><tr><td>CountryManager</td><td>country.manager@demo.local</td><td>@Model.Password</td></tr><tr><td>TerritoryManager</td><td>territory.manager@demo.local</td><td>@Model.Password</td></tr><tr><td>SiteManager</td><td>site.manager@demo.local</td><td>@Model.Password</td></tr><tr><td>Requester</td><td>requester@demo.local</td><td>@Model.Password</td></tr></tbody></table>
+@{ ViewData["Title"] = "Development demo accounts"; }
+<h1>Development demo accounts</h1>
+<p>This page is unavailable outside Development. Password is the same for every account below.</p>
+<table class="table">
+    <thead><tr><th>Role</th><th>Email</th><th>Password</th></tr></thead>
+    <tbody>
+        @foreach (var account in Model.Accounts)
+        {
+            <tr>
+                <td>@account.Role</td>
+                <td>@account.Email</td>
+                <td>@Model.Password</td>
+            </tr>
+        }
+    </tbody>
+</table>

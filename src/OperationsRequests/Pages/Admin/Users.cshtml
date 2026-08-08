@@ -1,3 +1,140 @@
 @page
 @model OperationsRequests.Pages.Admin.UsersModel
-<h1>User administration</h1><div asp-validation-summary="All" class="text-danger"></div><form method="post" asp-page-handler="Create" class="card card-body mb-3"><input asp-for="Input.Email" placeholder="Email" class="form-control mb-2"/><input asp-for="Input.DisplayName" placeholder="Display name" class="form-control mb-2"/><input asp-for="Input.Password" type="password" placeholder="Temporary password" class="form-control mb-2"/><select asp-for="Input.Role" class="form-select mb-2">@foreach(var r in OperationsRequests.Domain.Roles.All){<option>@r</option>}</select><select asp-for="Input.CountryId" class="form-select mb-2"><option value="">Country</option>@foreach(var x in Model.Countries){<option value="@x.Id">@x.Name</option>}</select><select asp-for="Input.TerritoryId" class="form-select mb-2"><option value="">Territory</option>@foreach(var x in Model.Territories){<option value="@x.Id">@x.Name</option>}</select><select asp-for="Input.SiteId" class="form-select mb-2"><option value="">Site</option>@foreach(var x in Model.Sites){<option value="@x.Id">@x.Name</option>}</select><button class="btn btn-primary">Create user</button></form><table class="table"><thead><tr><th>Email</th><th>Active</th><th>Assignment</th><th></th></tr></thead><tbody>@foreach(var u in Model.Users){<tr><td>@u.Email</td><td>@u.IsActive</td><td><form method="post" asp-page-handler="Assign"><input name="id" value="@u.Id" type="hidden"/><select name="role">@foreach(var r in OperationsRequests.Domain.Roles.All){<option value="@r">@r</option>}</select><select name="countryId"><option></option>@foreach(var x in Model.Countries){<option value="@x.Id">@x.Name</option>}</select><select name="territoryId"><option></option>@foreach(var x in Model.Territories){<option value="@x.Id">@x.Name</option>}</select><select name="siteId"><option></option>@foreach(var x in Model.Sites){<option value="@x.Id">@x.Name</option>}</select><button class="btn btn-sm btn-outline-primary">Save</button></form></td><td><form method="post" asp-page-handler="Toggle"><input name="id" value="@u.Id" type="hidden"/><button class="btn btn-sm btn-outline-danger">Toggle active</button></form></td></tr>}</tbody></table>
+<h1>User administration</h1>
+<div asp-validation-summary="All" class="text-danger"></div>
+<form method="post" asp-page-handler="Create" class="card card-body mb-3 assign-form">
+    <input asp-for="Input.Email" placeholder="Email" class="form-control mb-2" />
+    <input asp-for="Input.DisplayName" placeholder="Display name" class="form-control mb-2" />
+    <input asp-for="Input.Password" type="password" placeholder="Temporary password" class="form-control mb-2" />
+    <select asp-for="Input.Role" class="form-select mb-2 role-select">
+        @foreach (var r in OperationsRequests.Domain.Roles.All)
+        {
+            <option value="@r">@r</option>
+        }
+    </select>
+    <select asp-for="Input.CountryId" class="form-select mb-2 country-select">
+        <option value="">Country</option>
+        @foreach (var x in Model.Countries)
+        {
+            <option value="@x.Id">@x.Name</option>
+        }
+    </select>
+    <select asp-for="Input.TerritoryId" class="form-select mb-2 territory-select">
+        <option value="">Territory</option>
+        @foreach (var x in Model.Territories)
+        {
+            <option value="@x.Id" data-country="@x.CountryId">@x.Name</option>
+        }
+    </select>
+    <select asp-for="Input.SiteId" class="form-select mb-2 site-select">
+        <option value="">Site</option>
+        @foreach (var x in Model.Sites)
+        {
+            <option value="@x.Id" data-territory="@x.TerritoryId">@x.Name</option>
+        }
+    </select>
+    <button class="btn btn-primary">Create user</button>
+</form>
+<table class="table">
+    <thead><tr><th>Email</th><th>Active</th><th>Assignment</th><th></th></tr></thead>
+    <tbody>
+        @foreach (var u in Model.Users)
+        {
+            var currentRole = Model.UserRoles.GetValueOrDefault(u.Id, "");
+            <tr>
+                <td>@u.Email</td>
+                <td>@u.IsActive</td>
+                <td>
+                    <form method="post" asp-page-handler="Assign" class="assign-form">
+                        <input name="id" value="@u.Id" type="hidden" />
+                        <select name="role" class="role-select">
+                            @foreach (var r in OperationsRequests.Domain.Roles.All)
+                            {
+                                <option value="@r" selected="@(currentRole == r)">@r</option>
+                            }
+                        </select>
+                        <select name="countryId" class="country-select">
+                            <option value=""></option>
+                            @foreach (var x in Model.Countries)
+                            {
+                                <option value="@x.Id" selected="@(u.CountryId == x.Id)">@x.Name</option>
+                            }
+                        </select>
+                        <select name="territoryId" class="territory-select">
+                            <option value=""></option>
+                            @foreach (var x in Model.Territories)
+                            {
+                                <option value="@x.Id" data-country="@x.CountryId" selected="@(u.TerritoryId == x.Id)">@x.Name</option>
+                            }
+                        </select>
+                        <select name="siteId" class="site-select">
+                            <option value=""></option>
+                            @foreach (var x in Model.Sites)
+                            {
+                                <option value="@x.Id" data-territory="@x.TerritoryId" selected="@(u.SiteId == x.Id)">@x.Name</option>
+                            }
+                        </select>
+                        <button class="btn btn-sm btn-outline-primary">Save</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" asp-page-handler="Toggle">
+                        <input name="id" value="@u.Id" type="hidden" />
+                        <button class="btn btn-sm btn-outline-danger">Toggle active</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+(function () {
+    function needsFor(role) {
+        return {
+            country: role !== 'PlatformAdmin',
+            territory: role === 'TerritoryManager' || role === 'SiteManager' || role === 'StaffMember',
+            site: role === 'SiteManager' || role === 'StaffMember'
+        };
+    }
+    function filterOptions(select, attr, matchValue) {
+        Array.prototype.forEach.call(select.options, function (o) {
+            if (!o.value) return;
+            o.hidden = !!matchValue && o.dataset[attr] !== matchValue;
+        });
+        if (select.selectedOptions[0] && select.selectedOptions[0].hidden) select.value = '';
+    }
+    function refreshCascade(form) {
+        var countrySel = form.querySelector('.country-select');
+        var territorySel = form.querySelector('.territory-select');
+        var siteSel = form.querySelector('.site-select');
+        filterOptions(territorySel, 'country', countrySel.value);
+        filterOptions(siteSel, 'territory', territorySel.value);
+    }
+    function applyRole(form, resetInvalid) {
+        var role = form.querySelector('.role-select').value;
+        var need = needsFor(role);
+        var countrySel = form.querySelector('.country-select');
+        var territorySel = form.querySelector('.territory-select');
+        var siteSel = form.querySelector('.site-select');
+        countrySel.disabled = !need.country;
+        territorySel.disabled = !need.territory;
+        siteSel.disabled = !need.site;
+        if (resetInvalid) {
+            if (!need.country) countrySel.value = '';
+            if (!need.territory) territorySel.value = '';
+            if (!need.site) siteSel.value = '';
+        }
+        refreshCascade(form);
+    }
+    document.addEventListener('change', function (e) {
+        var form = e.target.closest('form.assign-form');
+        if (!form) return;
+        if (e.target.classList.contains('role-select')) applyRole(form, true);
+        else if (e.target.classList.contains('country-select')) refreshCascade(form);
+        else if (e.target.classList.contains('territory-select')) refreshCascade(form);
+    });
+    document.querySelectorAll('form.assign-form').forEach(function (form) {
+        applyRole(form, false);
+    });
+})();
+</script>

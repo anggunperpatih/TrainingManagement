@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OperationsRequests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4e1eacbf3017af1ee9e6cf7c370fc8d47d7b6c37")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6fb2073fd8b0f5471981c7d286c7783464a6dbbf")]
 [assembly: System.Reflection.AssemblyProductAttribute("OperationsRequests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OperationsRequests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
