@@ -297,3 +297,4 @@ C:\Test\src\OperationsRequests\obj\Release\net10.0\refint\OperationsRequests.dll
 C:\Test\src\OperationsRequests\obj\Release\net10.0\OperationsRequests.pdb
 C:\Test\src\OperationsRequests\obj\Release\net10.0\OperationsRequests.genruntimeconfig.cache
 C:\Test\src\OperationsRequests\obj\Release\net10.0\ref\OperationsRequests.dll
+C:\Test\src\OperationsRequests\obj\Release\net10.0\OperationsRequests.sourcelink.json
